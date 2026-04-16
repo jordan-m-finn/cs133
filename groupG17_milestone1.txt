@@ -264,3 +264,169 @@ R4# show ip ospf neighbor
 Neighbor ID     Pri State           Dead Time Address         Interface                        RXmtL RqstL DBsmL
 10.100.0.1        1 Full/Backup       33.911s 10.24.0.1       s1-0:10.24.0.2                       0     0     0
 10.100.0.2        1 Full/Backup       34.215s 10.24.0.5       s1-1:10.24.0.6                       0     0     0
+
+Q5_P1
+
+R3# show ip ospf database
+
+       OSPF Router with ID (10.100.0.3)
+
+                Router Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum  Link count
+10.100.0.1      10.100.0.1       259 0x80000045 0x1e79 3
+10.100.0.2      10.100.0.2       128 0x8000005a 0xf0cf 4
+10.100.0.3      10.100.0.3       122 0x80000007 0xd8e8 3
+10.100.0.4      10.100.0.4       309 0x80000047 0x2507 4
+10.100.0.5      10.100.0.5       131 0x80000042 0xef87 3
+10.100.0.6      10.100.0.6       260 0x8000002b 0xdd82 3
+
+                Net Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum
+10.24.0.2       10.100.0.4       289 0x80000015 0xc808
+10.24.0.6       10.100.0.4       299 0x80000015 0xaa21
+10.35.0.2       10.100.0.5       128 0x80000008 0x7a54
+10.56.0.2       10.100.0.6       280 0x80000014 0x7733
+10.62.0.1       10.100.0.2       128 0x80000009 0x2990
+10.62.0.6       10.100.0.2       258 0x80000014 0xc8e2
+10.66.0.2       10.100.0.6       301 0x80000014 0x0996
+
+R3# show ip ospf database self-originate
+
+       OSPF Router with ID (10.100.0.3)
+
+                Router Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum  Link count
+10.100.0.3      10.100.0.3       178 0x80000007 0xd8e8 3
+
+R3# show ip ospf database network self-originate
+
+       OSPF Router with ID (10.100.0.3)
+
+
+                Net Link States (Area 0.0.0.0)
+
+R3# show ip ospf database router self-originate
+
+       OSPF Router with ID (10.100.0.3)
+
+
+                Router Link States (Area 0.0.0.0)
+
+  LS age: 209
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x3
+  Flags: 0x0
+  LS Type: router-LSA
+  Link State ID: 10.100.0.3
+  Advertising Router: 10.100.0.3
+  LS Seq Number: 80000007
+  Checksum: 0xd8e8
+  Length: 60
+
+   Number of Links: 3
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.35.0.2
+     (Link Data) Router Interface address: 10.35.0.1
+      Number of TOS metrics: 0
+       TOS 0 Metric: 20
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.62.0.1
+     (Link Data) Router Interface address: 10.62.0.2
+      Number of TOS metrics: 0
+       TOS 0 Metric: 20
+
+    Link connected to: Stub Network
+     (Link ID) Net: 10.100.0.3
+     (Link Data) Network Mask: 255.255.255.255
+      Number of TOS metrics: 0
+       TOS 0 Metric: 0
+
+
+R2# show ip ospf database
+
+       OSPF Router with ID (10.100.0.2)
+
+                Router Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum  Link count
+10.100.0.1      10.100.0.1       782 0x80000045 0x1e79 3
+10.100.0.2      10.100.0.2       651 0x8000005a 0xf0cf 4
+10.100.0.3      10.100.0.3       650 0x80000007 0xd8e8 3
+10.100.0.4      10.100.0.4       832 0x80000047 0x2507 4
+10.100.0.5      10.100.0.5       654 0x80000042 0xef87 3
+10.100.0.6      10.100.0.6       783 0x8000002b 0xdd82 3
+
+                Net Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum
+10.24.0.2       10.100.0.4       812 0x80000015 0xc808
+10.24.0.6       10.100.0.4       822 0x80000015 0xaa21
+10.35.0.2       10.100.0.5       653 0x80000008 0x7a54
+10.56.0.2       10.100.0.6       803 0x80000014 0x7733
+10.62.0.1       10.100.0.2       651 0x80000009 0x2990
+10.62.0.6       10.100.0.2       781 0x80000014 0xc8e2
+10.66.0.2       10.100.0.6       824 0x80000014 0x0996
+
+R2# show ip ospf database self-originate
+
+       OSPF Router with ID (10.100.0.2)
+
+                Router Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum  Link count
+10.100.0.2      10.100.0.2       679 0x8000005a 0xf0cf 4
+
+                Net Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum
+10.62.0.1       10.100.0.2       679 0x80000009 0x2990
+10.62.0.6       10.100.0.2       809 0x80000014 0xc8e2
+
+R2# show ip ospf database router self-originate
+
+       OSPF Router with ID (10.100.0.2)
+
+
+                Router Link States (Area 0.0.0.0)
+
+  LS age: 698
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x3
+  Flags: 0x0
+  LS Type: router-LSA
+  Link State ID: 10.100.0.2
+  Advertising Router: 10.100.0.2
+  LS Seq Number: 8000005a
+  Checksum: 0xf0cf
+  Length: 72
+
+   Number of Links: 4
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.24.0.6
+     (Link Data) Router Interface address: 10.24.0.5
+      Number of TOS metrics: 0
+       TOS 0 Metric: 20
+
+    Link connected to: Stub Network
+     (Link ID) Net: 10.100.0.2
+     (Link Data) Network Mask: 255.255.255.255
+      Number of TOS metrics: 0
+       TOS 0 Metric: 0
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.62.0.1
+     (Link Data) Router Interface address: 10.62.0.1
+      Number of TOS metrics: 0
+       TOS 0 Metric: 20
+
+    Link connected to: a Transit Network
+     (Link ID) Designated Router address: 10.62.0.6
+     (Link Data) Router Interface address: 10.62.0.6
+      Number of TOS metrics: 0
+       TOS 0 Metric: 20
