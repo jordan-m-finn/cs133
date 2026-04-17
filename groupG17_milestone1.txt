@@ -2,19 +2,19 @@ Q1_P1
 R1# show interface brief
 Interface       Status  VRF             Addresses
 ---------       ------  ---             ---------
-eth0            up      default         172.20.20.7/24
-                                        + 3fff:172:20:20::7/64
+eth0            up      default         172.20.20.3/24
+                                        + 3fff:172:20:20::3/64
 ip6tnl0         down    default
 lo              up      default         10.100.0.1/32
-s1-0            up      default         10.24.0.1/30
+s1-0            up      default         10.24.0.1/32
 s1-1            up      default         10.62.0.5/30
 sit0            down    default
 tunl0           down    default
 R2# show interface brief
 Interface       Status  VRF             Addresses
 ---------       ------  ---             ---------
-eth0            up      default         172.20.20.4/24
-                                        + 3fff:172:20:20::4/64
+eth0            up      default         172.20.20.3/24
+                                        + 3fff:172:20:20::3/64
 ip6tnl0         down    default
 lo              up      default         10.100.0.2/32
 s1-0            up      default         10.24.0.5/30
@@ -25,8 +25,8 @@ tunl0           down    default
 R3# show interface brief
 Interface       Status  VRF             Addresses
 ---------       ------  ---             ---------
-eth0            up      default         172.20.20.2/24
-                                        + 3fff:172:20:20::2/64
+eth0            up      default         172.20.20.5/24
+                                        + 3fff:172:20:20::5/64
 ip6tnl0         down    default
 lo              up      default         10.100.0.3/32
 s1-0            up      default         10.35.0.1/30
@@ -79,8 +79,12 @@ frr defaults traditional
 hostname R1
 no ipv6 forwarding
 !
+interface lo
+ ip address 10.100.0.1/32
+!
 interface s1-0
  ip address 10.24.0.1/30
+ ip address 10.24.0.1/32
  ip ospf cost 20
 !
 interface s1-1
@@ -91,6 +95,7 @@ router ospf
  ospf router-id 10.100.0.1
  network 10.24.0.0/30 area 0.0.0.0
  network 10.62.0.4/30 area 0.0.0.0
+ network 10.100.0.1/32 area 0.0.0.0
 !
 line vty
 !
@@ -104,6 +109,9 @@ frr version 7.5.1_git
 frr defaults traditional
 hostname R2
 no ipv6 forwarding
+!
+interface lo
+ ip address 10.100.0.2/32
 !
 interface s1-0
  ip address 10.24.0.5/30
@@ -122,6 +130,7 @@ router ospf
  network 10.24.0.4/30 area 0.0.0.0
  network 10.62.0.0/30 area 0.0.0.0
  network 10.62.0.4/30 area 0.0.0.0
+ network 10.100.0.2/32 area 0.0.0.0
 !
 line vty
 !
@@ -136,6 +145,9 @@ frr defaults traditional
 hostname R3
 no ipv6 forwarding
 !
+interface lo
+ ip address 10.100.0.3/32
+!
 interface s1-0
  ip address 10.35.0.1/30
  ip ospf cost 20
@@ -148,6 +160,7 @@ router ospf
  ospf router-id 10.100.0.3
  network 10.35.0.0/30 area 0.0.0.0
  network 10.62.0.0/30 area 0.0.0.0
+ network 10.100.0.3/32 area 0.0.0.0
 !
 line vty
 !
@@ -161,6 +174,9 @@ frr version 7.5.1_git
 frr defaults traditional
 hostname R4
 no ipv6 forwarding
+!
+interface lo
+ ip address 10.100.0.4/32
 !
 interface s1-0
  ip address 10.24.0.2/30
@@ -179,6 +195,7 @@ router ospf
  network 10.24.0.0/30 area 0.0.0.0
  network 10.24.0.4/30 area 0.0.0.0
  network 10.56.0.0/30 area 0.0.0.0
+ network 10.100.0.4/32 area 0.0.0.0
 !
 line vty
 !
@@ -193,18 +210,25 @@ frr defaults traditional
 hostname R5
 no ipv6 forwarding
 !
+interface lo
+ ip address 10.100.0.5/32
+!
 interface s1-0
+ ip address 10.35.0.2/30
  ip address 10.56.0.2/30
  ip ospf cost 20
 !
 interface s1-1
+ ip address 10.66.0.1/30
  ip address 10.66.0.2/30
  ip ospf cost 20
 !
 router ospf
- ospf router-id 10.100.0.6
+ ospf router-id 10.100.0.5
+ network 10.35.0.0/30 area 0.0.0.0
  network 10.56.0.0/30 area 0.0.0.0
  network 10.66.0.0/30 area 0.0.0.0
+ network 10.100.0.5/32 area 0.0.0.0
 !
 line vty
 !
@@ -219,6 +243,23 @@ frr defaults traditional
 hostname R6
 no ipv6 forwarding
 !
+interface lo
+ ip address 10.100.0.6/32
+!
+interface s1-0
+ ip address 10.56.0.2/30
+ ip ospf cost 20
+!
+interface s1-1
+ ip address 10.66.0.2/30
+ ip ospf cost 20
+!
+router ospf
+ ospf router-id 10.100.0.6
+ network 10.56.0.0/30 area 0.0.0.0
+ network 10.66.0.0/30 area 0.0.0.0
+ network 10.100.0.6/32 area 0.0.0.0
+!
 line vty
 !
 end
@@ -231,18 +272,26 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        F - PBR, f - OpenFabric,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
 
-K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 06:31:36
-O   10.24.0.0/30 [110/20] is directly connected, s1-0, weight 1, 02:22:00
-C>* 10.24.0.0/30 is directly connected, s1-0, 02:23:27
-O   10.24.0.4/30 [110/20] is directly connected, s1-1, weight 1, 02:20:09
-C>* 10.24.0.4/30 is directly connected, s1-1, 02:21:38
-O>* 10.35.0.0/30 [110/60] via 10.24.0.5, s1-1, weight 1, 00:51:50
-O   10.56.0.0/30 [110/20] is directly connected, s1-2, weight 1, 02:19:21
-C>* 10.56.0.0/30 is directly connected, s1-2, 02:19:43
-O>* 10.62.0.0/30 [110/40] via 10.24.0.5, s1-1, weight 1, 00:51:50
-O>* 10.62.0.4/30 [110/40] via 10.24.0.1, s1-0, weight 1, 00:51:50
-  *                       via 10.24.0.5, s1-1, weight 1, 00:51:50
-C>* 172.20.20.0/24 is directly connected, eth0, 06:31:36
+K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:06:47
+O   10.24.0.0/30 [110/20] is directly connected, s1-0, weight 1, 00:06:47
+C>* 10.24.0.0/30 is directly connected, s1-0, 00:06:47
+O   10.24.0.4/30 [110/20] is directly connected, s1-1, weight 1, 00:06:47
+C>* 10.24.0.4/30 is directly connected, s1-1, 00:06:47
+O>* 10.35.0.0/30 [110/60] via 10.24.0.5, s1-1, weight 1, 00:05:56
+O   10.56.0.0/30 [110/20] is directly connected, s1-2, weight 1, 00:06:47
+C>* 10.56.0.0/30 is directly connected, s1-2, 00:06:47
+O>* 10.62.0.0/30 [110/40] via 10.24.0.5, s1-1, weight 1, 00:05:57
+O>* 10.62.0.4/30 [110/40] via 10.24.0.1, s1-0, weight 1, 00:05:52
+  *                       via 10.24.0.5, s1-1, weight 1, 00:05:52
+O>* 10.66.0.0/30 [110/40] via 10.56.0.2, s1-2, weight 1, 00:03:12
+O>* 10.100.0.1/32 [110/20] via 10.24.0.1, s1-0, weight 1, 00:05:57
+O>* 10.100.0.2/32 [110/20] via 10.24.0.5, s1-1, weight 1, 00:05:57
+O>* 10.100.0.3/32 [110/40] via 10.24.0.5, s1-1, weight 1, 00:05:18
+O   10.100.0.4/32 [110/0] is directly connected, lo, weight 1, 00:04:18
+C>* 10.100.0.4/32 is directly connected, lo, 00:04:18
+O>* 10.100.0.5/32 [110/60] via 10.24.0.5, s1-1, weight 1, 00:03:26
+O>* 10.100.0.6/32 [110/20] via 10.56.0.2, s1-2, weight 1, 00:03:12
+C>* 172.20.20.0/24 is directly connected, eth0, 00:06:47
 R4# show ip route ospf
 Codes: K - kernel route, C - connected, S - static, R - RIP,
        O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
@@ -250,23 +299,29 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        F - PBR, f - OpenFabric,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
 
-O   10.24.0.0/30 [110/20] is directly connected, s1-0, weight 1, 02:22:51
-O   10.24.0.4/30 [110/20] is directly connected, s1-1, weight 1, 02:21:00
-O>* 10.35.0.0/30 [110/60] via 10.24.0.5, s1-1, weight 1, 00:52:41
-O   10.56.0.0/30 [110/20] is directly connected, s1-2, weight 1, 02:20:12
-O>* 10.62.0.0/30 [110/40] via 10.24.0.5, s1-1, weight 1, 00:52:41
-O>* 10.62.0.4/30 [110/40] via 10.24.0.1, s1-0, weight 1, 00:52:41
-  *                       via 10.24.0.5, s1-1, weight 1, 00:52:41
+O   10.24.0.0/30 [110/20] is directly connected, s1-0, weight 1, 00:07:18
+O   10.24.0.4/30 [110/20] is directly connected, s1-1, weight 1, 00:07:18
+O>* 10.35.0.0/30 [110/60] via 10.24.0.5, s1-1, weight 1, 00:06:27
+O   10.56.0.0/30 [110/20] is directly connected, s1-2, weight 1, 00:07:18
+O>* 10.62.0.0/30 [110/40] via 10.24.0.5, s1-1, weight 1, 00:06:28
+O>* 10.62.0.4/30 [110/40] via 10.24.0.1, s1-0, weight 1, 00:06:23
+  *                       via 10.24.0.5, s1-1, weight 1, 00:06:23
+O>* 10.66.0.0/30 [110/40] via 10.56.0.2, s1-2, weight 1, 00:03:43
+O>* 10.100.0.1/32 [110/20] via 10.24.0.1, s1-0, weight 1, 00:06:28
+O>* 10.100.0.2/32 [110/20] via 10.24.0.5, s1-1, weight 1, 00:06:28
+O>* 10.100.0.3/32 [110/40] via 10.24.0.5, s1-1, weight 1, 00:05:49
+O   10.100.0.4/32 [110/0] is directly connected, lo, weight 1, 00:04:49
+O>* 10.100.0.5/32 [110/60] via 10.24.0.5, s1-1, weight 1, 00:03:57
+O>* 10.100.0.6/32 [110/20] via 10.56.0.2, s1-2, weight 1, 00:03:43
 
 Q4_P1
 R4# show ip ospf neighbor
-
 Neighbor ID     Pri State           Dead Time Address         Interface                        RXmtL RqstL DBsmL
-10.100.0.1        1 Full/Backup       33.911s 10.24.0.1       s1-0:10.24.0.2                       0     0     0
-10.100.0.2        1 Full/Backup       34.215s 10.24.0.5       s1-1:10.24.0.6                       0     0     0
+10.100.0.1        1 Full/Backup       39.227s 10.24.0.1       s1-0:10.24.0.2                       0     0     0
+10.100.0.2        1 Full/Backup       38.956s 10.24.0.5       s1-1:10.24.0.6                       0     0     0
+10.100.0.6        1 Full/Backup       33.323s 10.56.0.2       s1-2:10.56.0.1                       0     0     0
 
 Q5_P1
-
 R3# show ip ospf database
 
        OSPF Router with ID (10.100.0.3)
@@ -274,23 +329,23 @@ R3# show ip ospf database
                 Router Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum  Link count
-10.100.0.1      10.100.0.1       259 0x80000045 0x1e79 3
-10.100.0.2      10.100.0.2       128 0x8000005a 0xf0cf 4
-10.100.0.3      10.100.0.3       122 0x80000007 0xd8e8 3
-10.100.0.4      10.100.0.4       309 0x80000047 0x2507 4
-10.100.0.5      10.100.0.5       131 0x80000042 0xef87 3
-10.100.0.6      10.100.0.6       260 0x8000002b 0xdd82 3
+10.100.0.1      10.100.0.1       550 0x80000007 0x9441 3
+10.100.0.2      10.100.0.2       549 0x8000000b 0x30de 4
+10.100.0.3      10.100.0.3       408 0x80000007 0xe4dc 3
+10.100.0.4      10.100.0.4       390 0x8000000a 0x6505 4
+10.100.0.5      10.100.0.5       408 0x80000005 0xe9b9 4
+10.100.0.6      10.100.0.6       356 0x80000006 0x8553 3
 
                 Net Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum
-10.24.0.2       10.100.0.4       289 0x80000015 0xc808
-10.24.0.6       10.100.0.4       299 0x80000015 0xaa21
-10.35.0.2       10.100.0.5       128 0x80000008 0x7a54
-10.56.0.2       10.100.0.6       280 0x80000014 0x7733
-10.62.0.1       10.100.0.2       128 0x80000009 0x2990
-10.62.0.6       10.100.0.2       258 0x80000014 0xc8e2
-10.66.0.2       10.100.0.6       301 0x80000014 0x0996
+10.24.0.2       10.100.0.4       555 0x80000001 0xf0f3
+10.24.0.6       10.100.0.4       555 0x80000001 0xd20d
+10.35.0.1       10.100.0.3       408 0x80000001 0x9e3a
+10.56.0.1       10.100.0.4       390 0x80000001 0xb30d
+10.62.0.2       10.100.0.3       558 0x80000001 0x2996
+10.62.0.6       10.100.0.2       549 0x80000001 0xeecf
+
 
 R3# show ip ospf database self-originate
 
@@ -299,7 +354,14 @@ R3# show ip ospf database self-originate
                 Router Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum  Link count
-10.100.0.3      10.100.0.3       178 0x80000007 0xd8e8 3
+10.100.0.3      10.100.0.3       408 0x80000007 0xe4dc 3
+
+                Net Link States (Area 0.0.0.0)
+
+Link ID         ADV Router      Age  Seq#       CkSum
+10.35.0.1       10.100.0.3       408 0x80000001 0x9e3a
+10.62.0.2       10.100.0.3       558 0x80000001 0x2996
+
 
 R3# show ip ospf database network self-originate
 
@@ -308,6 +370,34 @@ R3# show ip ospf database network self-originate
 
                 Net Link States (Area 0.0.0.0)
 
+  LS age: 408
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x3
+  LS Type: network-LSA
+  Link State ID: 10.35.0.1 (address of Designated Router)
+  Advertising Router: 10.100.0.3
+  LS Seq Number: 80000001
+  Checksum: 0x9e3a
+  Length: 32
+
+  Network Mask: /30
+        Attached Router: 10.100.0.3
+        Attached Router: 10.100.0.5
+
+  LS age: 558
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x3
+  LS Type: network-LSA
+  Link State ID: 10.62.0.2 (address of Designated Router)
+  Advertising Router: 10.100.0.3
+  LS Seq Number: 80000001
+  Checksum: 0x2996
+  Length: 32
+
+  Network Mask: /30
+        Attached Router: 10.100.0.2
+        Attached Router: 10.100.0.3
+
 R3# show ip ospf database router self-originate
 
        OSPF Router with ID (10.100.0.3)
@@ -315,7 +405,7 @@ R3# show ip ospf database router self-originate
 
                 Router Link States (Area 0.0.0.0)
 
-  LS age: 209
+  LS age: 409
   Options: 0x2  : *|-|-|-|-|-|E|-
   LS Flags: 0x3
   Flags: 0x0
@@ -323,19 +413,19 @@ R3# show ip ospf database router self-originate
   Link State ID: 10.100.0.3
   Advertising Router: 10.100.0.3
   LS Seq Number: 80000007
-  Checksum: 0xd8e8
+  Checksum: 0xe4dc
   Length: 60
 
    Number of Links: 3
 
     Link connected to: a Transit Network
-     (Link ID) Designated Router address: 10.35.0.2
+     (Link ID) Designated Router address: 10.35.0.1
      (Link Data) Router Interface address: 10.35.0.1
       Number of TOS metrics: 0
        TOS 0 Metric: 20
 
     Link connected to: a Transit Network
-     (Link ID) Designated Router address: 10.62.0.1
+     (Link ID) Designated Router address: 10.62.0.2
      (Link Data) Router Interface address: 10.62.0.2
       Number of TOS metrics: 0
        TOS 0 Metric: 20
@@ -345,8 +435,6 @@ R3# show ip ospf database router self-originate
      (Link Data) Network Mask: 255.255.255.255
       Number of TOS metrics: 0
        TOS 0 Metric: 0
-
-
 R2# show ip ospf database
 
        OSPF Router with ID (10.100.0.2)
@@ -354,23 +442,23 @@ R2# show ip ospf database
                 Router Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum  Link count
-10.100.0.1      10.100.0.1       782 0x80000045 0x1e79 3
-10.100.0.2      10.100.0.2       651 0x8000005a 0xf0cf 4
-10.100.0.3      10.100.0.3       650 0x80000007 0xd8e8 3
-10.100.0.4      10.100.0.4       832 0x80000047 0x2507 4
-10.100.0.5      10.100.0.5       654 0x80000042 0xef87 3
-10.100.0.6      10.100.0.6       783 0x8000002b 0xdd82 3
+10.100.0.1      10.100.0.1       624 0x80000007 0x9441 3
+10.100.0.2      10.100.0.2       623 0x8000000b 0x30de 4
+10.100.0.3      10.100.0.3       484 0x80000007 0xe4dc 3
+10.100.0.4      10.100.0.4       464 0x8000000a 0x6505 4
+10.100.0.5      10.100.0.5       484 0x80000005 0xe9b9 4
+10.100.0.6      10.100.0.6       431 0x80000006 0x8553 3
 
                 Net Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum
-10.24.0.2       10.100.0.4       812 0x80000015 0xc808
-10.24.0.6       10.100.0.4       822 0x80000015 0xaa21
-10.35.0.2       10.100.0.5       653 0x80000008 0x7a54
-10.56.0.2       10.100.0.6       803 0x80000014 0x7733
-10.62.0.1       10.100.0.2       651 0x80000009 0x2990
-10.62.0.6       10.100.0.2       781 0x80000014 0xc8e2
-10.66.0.2       10.100.0.6       824 0x80000014 0x0996
+10.24.0.2       10.100.0.4       629 0x80000001 0xf0f3
+10.24.0.6       10.100.0.4       629 0x80000001 0xd20d
+10.35.0.1       10.100.0.3       484 0x80000001 0x9e3a
+10.56.0.1       10.100.0.4       464 0x80000001 0xb30d
+10.62.0.2       10.100.0.3       634 0x80000001 0x2996
+10.62.0.6       10.100.0.2       623 0x80000001 0xeecf
+
 
 R2# show ip ospf database self-originate
 
@@ -379,13 +467,34 @@ R2# show ip ospf database self-originate
                 Router Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum  Link count
-10.100.0.2      10.100.0.2       679 0x8000005a 0xf0cf 4
+10.100.0.2      10.100.0.2       623 0x8000000b 0x30de 4
 
                 Net Link States (Area 0.0.0.0)
 
 Link ID         ADV Router      Age  Seq#       CkSum
-10.62.0.1       10.100.0.2       679 0x80000009 0x2990
-10.62.0.6       10.100.0.2       809 0x80000014 0xc8e2
+10.62.0.6       10.100.0.2       623 0x80000001 0xeecf
+
+
+R2# show ip ospf database network self-originate
+
+       OSPF Router with ID (10.100.0.2)
+
+
+                Net Link States (Area 0.0.0.0)
+
+  LS age: 623
+  Options: 0x2  : *|-|-|-|-|-|E|-
+  LS Flags: 0x3
+  LS Type: network-LSA
+  Link State ID: 10.62.0.6 (address of Designated Router)
+  Advertising Router: 10.100.0.2
+  LS Seq Number: 80000001
+  Checksum: 0xeecf
+  Length: 32
+
+  Network Mask: /30
+        Attached Router: 10.100.0.1
+        Attached Router: 10.100.0.2
 
 R2# show ip ospf database router self-originate
 
@@ -394,15 +503,15 @@ R2# show ip ospf database router self-originate
 
                 Router Link States (Area 0.0.0.0)
 
-  LS age: 698
+  LS age: 624
   Options: 0x2  : *|-|-|-|-|-|E|-
   LS Flags: 0x3
   Flags: 0x0
   LS Type: router-LSA
   Link State ID: 10.100.0.2
   Advertising Router: 10.100.0.2
-  LS Seq Number: 8000005a
-  Checksum: 0xf0cf
+  LS Seq Number: 8000000b
+  Checksum: 0x30de
   Length: 72
 
    Number of Links: 4
@@ -413,14 +522,8 @@ R2# show ip ospf database router self-originate
       Number of TOS metrics: 0
        TOS 0 Metric: 20
 
-    Link connected to: Stub Network
-     (Link ID) Net: 10.100.0.2
-     (Link Data) Network Mask: 255.255.255.255
-      Number of TOS metrics: 0
-       TOS 0 Metric: 0
-
     Link connected to: a Transit Network
-     (Link ID) Designated Router address: 10.62.0.1
+     (Link ID) Designated Router address: 10.62.0.2
      (Link Data) Router Interface address: 10.62.0.1
       Number of TOS metrics: 0
        TOS 0 Metric: 20
@@ -430,3 +533,22 @@ R2# show ip ospf database router self-originate
      (Link Data) Router Interface address: 10.62.0.6
       Number of TOS metrics: 0
        TOS 0 Metric: 20
+
+    Link connected to: Stub Network
+     (Link ID) Net: 10.100.0.2
+     (Link Data) Network Mask: 255.255.255.255
+      Number of TOS metrics: 0
+       TOS 0 Metric: 0
+
+Q7_P1
+R3# traceroute 10.66.0.2
+traceroute to 10.66.0.2 (10.66.0.2), 30 hops max, 46 byte packets
+ 1  10.66.0.2 (10.66.0.2)  0.025 ms  0.013 ms  0.003 ms
+
+Q7_P2
+R3# traceroute 10.66.0.2
+traceroute to 10.66.0.2 (10.66.0.2), 30 hops max, 46 byte packets
+ 1  10.62.0.1 (10.62.0.1)  0.028 ms  0.005 ms  0.005 ms
+ 2  10.24.0.6 (10.24.0.6)  0.005 ms  0.005 ms  0.001 ms
+ 3  10.66.0.2 (10.66.0.2)  0.001 ms  0.004 ms  0.002 ms
+
