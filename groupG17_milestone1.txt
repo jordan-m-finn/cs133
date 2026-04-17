@@ -5,7 +5,7 @@ Interface       Status  VRF             Addresses
 eth0            up      default         172.20.20.7/24
                                         + 3fff:172:20:20::7/64
 ip6tnl0         down    default
-lo              up      default
+lo              up      default         10.100.0.1/32
 s1-0            up      default         10.24.0.1/30
 s1-1            up      default         10.62.0.5/30
 sit0            down    default
@@ -16,7 +16,7 @@ Interface       Status  VRF             Addresses
 eth0            up      default         172.20.20.4/24
                                         + 3fff:172:20:20::4/64
 ip6tnl0         down    default
-lo              up      default
+lo              up      default         10.100.0.2/32
 s1-0            up      default         10.24.0.5/30
 s1-1            up      default         10.62.0.1/30
 s1-2            up      default         10.62.0.6/30
@@ -28,7 +28,7 @@ Interface       Status  VRF             Addresses
 eth0            up      default         172.20.20.2/24
                                         + 3fff:172:20:20::2/64
 ip6tnl0         down    default
-lo              up      default
+lo              up      default         10.100.0.3/32
 s1-0            up      default         10.35.0.1/30
 s1-1            up      default         10.62.0.2/30
 sit0            down    default
@@ -36,10 +36,10 @@ tunl0           down    default
 R4# show interface brief
 Interface       Status  VRF             Addresses
 ---------       ------  ---             ---------
-eth0            up      default         172.20.20.5/24
-                                        + 3fff:172:20:20::5/64
+eth0            up      default         172.20.20.6/24
+                                        + 3fff:172:20:20::6/64
 ip6tnl0         down    default
-lo              up      default
+lo              up      default         10.100.0.4/32
 s1-0            up      default         10.24.0.2/30
 s1-1            up      default         10.24.0.6/30
 s1-2            up      default         10.56.0.1/30
@@ -51,7 +51,7 @@ Interface       Status  VRF             Addresses
 eth0            up      default         172.20.20.3/24
                                         + 3fff:172:20:20::3/64
 ip6tnl0         down    default
-lo              up      default
+lo              up      default         10.100.0.5/32
 s1-0            up      default         10.56.0.2/30
 s1-1            up      default         10.66.0.2/30
 sit0            down    default
@@ -62,9 +62,9 @@ Interface       Status  VRF             Addresses
 eth0            up      default         172.20.20.6/24
                                         + 3fff:172:20:20::6/64
 ip6tnl0         down    default
-lo              up      default
-s1-0            up      default
-s1-1            up      default
+lo              up      default         10.100.0.6/32
+s1-0            up      default         10.56.0.2/30
+s1-1            up      default         10.66.0.2/30
 sit0            down    default
 tunl0           down    default
 
